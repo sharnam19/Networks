@@ -225,7 +225,7 @@ def max_pooling_backward(dOut,cache):
     
     return dx
 
-def convolve_forward(x,w,b,params):
+def convolve_forward_naive(x,w,b,params):
     """
         Input:
             x: of shape N,C,H,W
@@ -256,12 +256,49 @@ def convolve_forward(x,w,b,params):
             reshaped_x = x[:,:,top:bottom,left:right].reshape(N,-1)
             out[:,:,h,w] = reshaped_x.dot(reshaped_w)
     
-    out = out + b[np.newaxis,:,np.newaxis,np.newaxis]
-    
     cache = (x,w,params)
+    out += b[np.newaxis,:,np.newaxis,np.newaxis]
+    
     return out,cache
 
-def convolve_backward(dOut,cache):
+def convolve(x,w,params,mode='valid',backprop=False):
+    N,C,H,W = x.shape
+    D,_,HH,WW = w.shape
+    S = params.get('stride',1)
+    
+    Hout = abs(H-HH)//S + 1
+    Wout = abs(W-WW)//S + 1
+    
+    out = np.zeros((N,D,Hout,Wout))
+    if not backprop:
+        w = np.flip(np.flip(w,3),2)
+        
+    Hpadded = H + HH - 1
+    Wpadded = W + WW - 1
+    fx = np.fft.fft2(x,(Hpadded,Wpadded),axes=(-2,-1))
+    fw = np.fft.fft2(w,(Hpadded,Wpadded),axes=(-2,-1))
+    
+    padH = (Hpadded-Hout)//2
+    padW = (Wpadded-Wout)//2
+    fz = fx[:,np.newaxis,:,:,:] * fw[np.newaxis,:,:,:,:]
+
+    fz = np.sum(fz,axis=(2))
+    out = np.fft.ifft2(fz)
+    if mode == 'valid':
+        out = out[:,:,padH:-padH,padW:-padW].real
+    elif mode == 'full':
+        out = out.real
+    return out
+
+def convolve_forward_fast(x, w, b, params):
+    out = convolve(x,w,params)
+    out += b[np.newaxis,:,np.newaxis,np.newaxis]
+    
+    cache = (x,w,params)
+    
+    return out,cache
+
+def convolve_backward_fast(dOut,cache):
     """
         Input:
             dOut: Upstream Gradients
@@ -273,10 +310,19 @@ def convolve_backward(dOut,cache):
     """
     x,w,params=cache
     
+    N,C,H,W = x.shape
+    D,_,HH,WW = w.shape
+    
     db = np.sum(dOut,axis=(0,2,3))
     dx = np.zeros_like(x)
     dw = np.zeros_like(w)
     
+    shifted_w = np.swapaxes(w,0,1)
+    shifted_d = np.swapaxes(dOut,0,1)
+    shifted_d = np.flip((np.flip(shifted_d,3)),2)
+    shifted_x = np.swapaxes(x,0,1)
     
+    dx = convolve(dOut,shifted_w,params,mode='full',backprop=True)
+    dw = convolve(shifted_d,shifted_x,params,mode='valid',backprop=True)
     
     return dx,dw,db
