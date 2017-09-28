@@ -1,0 +1,24 @@
+import numpy as np
+
+class ReluLayer:
+    """
+    Input:
+    x of any shape
+    """
+    def __init__(self,x):
+        self.x=x
+
+    def forward(self):
+        """
+        Output: Of same shape as x after applying Relu Non Linearity
+        """
+        return np.maximum(0,self.x)
+
+    def backward(self,dOut):
+        """
+        Input: dOut of any shape is the upstream gradient
+        Output:dx of same shape as x
+        """
+        dx = np.sign(np.maximum(0,self.x))*dOut
+        return dx
+    
