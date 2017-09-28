@@ -72,3 +72,42 @@ def batch_normalization_backward(dOut,cache):
     dx = dx1+dx2
     
     return dx,dgamma,dbeta
+
+def spatial_batch_forward(x,gamma,beta,params):
+    """
+    Input:
+        x: Array of shape (N,C,H,W)
+        gamma : Scale Parameter of shape (C,)
+        beta : Shift Parameter of shape (C,)
+        params:
+            'mode' : 'train' or 'test'
+            'running_var' : Current value of exponential decayed variance over train set
+            'running_mean': Current value of exponential decayed mean over train set
+            'momentum' : Rate at which mean and variance should be decayed
+            'eps' : Epsilon value to prevent shooting of variance
+    """
+    N,C,H,W=x.shape
+    #Reshapes array to N,H,W,C
+    reshaped_x = np.swapaxes(np.swapaxes(x,1,2),2,3)
+    reshaped_x = reshaped_x.reshape(-1,C)
+    
+    out,cache = batch_normalization_forward(reshaped_x,gamma,beta,params)
+    out = out.reshape(N,H,W,C)
+    out = np.swapaxes(np.swapaxes(out,2,3),2,1)
+    return out,cache
+
+def spatial_batch_backward(dOut,cache):
+    """
+        Input
+            dOut : Upstream Gradients of shape (N,C,H,W)
+            cache : (x,gamma,beta,params,q,t,p,k)
+        Output
+            dx,dgamma,dbeta of same shape as x,gamma,beta
+    """
+    N,C,H,W = dOut.shape
+    reshaped_dOut = np.swapaxes(np.swapaxes(dOut,1,2),2,3)
+    reshaped_dOut = reshaped_dOut.reshape(-1,C)
+    dx,dgamma,dbeta = batch_normalization_backward(reshaped_dOut,cache)
+    dx = dx.reshape(N,H,W,C)
+    dx = np.swapaxes(np.swapaxes(dx,2,3),1,2)
+    return dx,dgamma,dbeta

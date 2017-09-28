@@ -134,6 +134,10 @@ def convolve_forward_naive(x,w,b,params):
     return out,cache
 
 def convolve(x,w,params,mode='valid',backprop=False):
+    """
+        Helper Method to calculate Convolution
+    """
+    
     N,C,H,W = x.shape
     D,_,HH,WW = w.shape
     S = params.get('stride',1)
@@ -163,6 +167,16 @@ def convolve(x,w,params,mode='valid',backprop=False):
     return out
 
 def convolve_forward_fast(x, w, b, params):
+    """
+        Input:
+            x: of shape N,C,H,W
+            w: of shape D,C,HH,WW
+            b: of shape D,
+            params
+        Output:
+            out : convolved Input
+            cache : (x,w,b)
+    """
     out = convolve(x,w,params)
     out += b[np.newaxis,:,np.newaxis,np.newaxis]
     
