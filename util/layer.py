@@ -1,9 +1,10 @@
 import numpy as np
 from scipy import signal
 
-def affine_forward(x, w, b):
+def affine_forward(x, input_list):
     """
         Input
+        input_list= [w, b]
         x: Input of shape (N,D)
         w: Weights of shape (D,H)
         b: Biases of shape (H,)
@@ -12,6 +13,8 @@ def affine_forward(x, w, b):
         Returns out of shape (N,H)
 
     """
+    w=input_list[0]
+    b=input_list[1]
     out = x.dot(w)+b
     cache = (x,w,b)
     return out,cache
@@ -30,7 +33,7 @@ def affine_backward(dOut,cache):
         
     return dx,dw,db
 
-def flatten_forward(x):
+def flatten_forward(x,input_list=None):
     """
         Input:
             x of any shape (N,D1,D2,D3,.....Dn)

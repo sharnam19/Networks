@@ -1,8 +1,9 @@
 import numpy as np
 
-def padding_forward(x, Ph, Pv):
+def padding_forward(x,input_list):
     """
         Input:
+            input_list=[Ph,Pv]
             x : of any shape
             Ph: Num of horizontal Padding on top and bottom
             Pv: Num of vertical Padding on sides
@@ -11,6 +12,8 @@ def padding_forward(x, Ph, Pv):
             out : Padded input with Ph and Pv layers of padding
             cache:(Ph,Pv)
     """
+    Ph = input_list[0]
+    Pv = input_list[1]
     shapes = list(x.shape)
     shapes[-2]+=2*Ph
     shapes[-1]+=2*Pv
@@ -32,9 +35,10 @@ def padding_backward(dOut,cache):
     dx = dOut[:,:,Ph:-Ph,Pv:-Pv]
     return dx
 
-def max_pooling_forward(x, pooling_params):
+def max_pooling_forward(x,input_list):
     """
         Input:
+            input_list = [pooling_params]
             x: Image of shape (N,C,H,W)
             pooling_params:
                 'pooling_height':Pooling Height
@@ -45,6 +49,7 @@ def max_pooling_forward(x, pooling_params):
             out: Pooled Image (N,C,Hout,Wout)
             cache : (out,x,pooling_params)
     """
+    pooling_params = input_list[0]
     Ph = pooling_params.get('pooling_height',2)
     Pw = pooling_params.get('pooling_width',2)
     PSH = pooling_params.get('pooling_stride_height',2)
@@ -103,7 +108,8 @@ def convolve_forward_naive(x,w,b,params):
             x: of shape N,C,H,W
             w: of shape D,C,HH,WW
             b: of shape D,
-            params
+            params:
+                'stride' of input
         Output:
             out : convolved Input
             cache : (x,w,b)
@@ -166,17 +172,23 @@ def convolve(x,w,params,mode='valid',backprop=False):
         out = out.real
     return out
 
-def convolve_forward_fast(x, w, b, params):
+def convolve_forward_fast(x,input_list):
     """
         Input:
+            input_list = [w,b,params]
             x: of shape N,C,H,W
             w: of shape D,C,HH,WW
             b: of shape D,
-            params
+            params:
+                'stride':Stride of weight
         Output:
             out : convolved Input
             cache : (x,w,b)
     """
+    w=input_list[0]
+    b=input_list[1]
+    params=input_list[2]
+    
     out = convolve(x,w,params)
     out += b[np.newaxis,:,np.newaxis,np.newaxis]
     

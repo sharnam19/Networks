@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.stats import threshold
-def relu_forward(x):
+def relu_forward(x,input_list=None):
     """
     Input : x of any shape
     Output: Of same shape as x after applying Relu Non Linearity
@@ -18,7 +18,7 @@ def relu_backward(dOut,cache):
     dx = np.sign(np.maximum(0,x))*dOut
     return dx
 
-def sigmoid_forward(x):
+def sigmoid_forward(x,input_list=None):
     """
     Input x of any shape
 
@@ -41,7 +41,7 @@ def sigmoid_backward(dOut,cache):
     dx = out*(1-out)*dOut
     return dx
 
-def tanh_forward(x):
+def tanh_forward(x,input_list=None):
     """
     Input:
         x of any shape
@@ -67,7 +67,7 @@ def tanh_backward(dOut,cache):
     dx = (1-out*out)*dOut
     return dx
 
-def leaky_relu_forward(x):
+def leaky_relu_forward(x,input_list=None):
     """
     Input:
         x of any shape
