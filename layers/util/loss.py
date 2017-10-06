@@ -1,16 +1,14 @@
 import numpy as np
 
-def softmax_loss(x,input_list=[None]):
+def softmax_loss(x,y=None):
     """
         Input:
-            input_list=[y]
             x of shape (N,D)
             y of shape (N,). It is the class values
         Output:
             loss: Loss Value
             dx: Softmax Loss wrt the input. Same Shape as x
     """
-    y=input_list[0]
     maximum = np.max(x,axis=1)
     shifted_x = x - maximum[:,np.newaxis]
     exp_x = np.exp(shifted_x)
@@ -28,7 +26,7 @@ def softmax_loss(x,input_list=[None]):
     dx = (scores-offset)/N
     return loss,dx
 
-def svm_loss(x,input_list=[None]):
+def svm_loss(x,y=None):
     """
         Input:
             input_list=[y]
@@ -38,7 +36,6 @@ def svm_loss(x,input_list=[None]):
             loss : loss value
             dx  : SVM Loss wrt input. Same shape as x
     """
-    y=input_list[0]
     scores = x
     if y is None:
         return scores

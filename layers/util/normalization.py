@@ -1,9 +1,8 @@
 import numpy as np
 
-def batch_normalization_forward(x, input_list):
+def batch_normalization_forward(x, gamma,beta,params):
     """
     Input:
-        input_list=[gamma,beta,params]
         x: Array of shape (N,D)
         gamma : Scale Parameter of shape (D,)
         beta : Shift Parameter of shape (D,)
@@ -14,9 +13,6 @@ def batch_normalization_forward(x, input_list):
             'momentum' : Rate at which mean and variance should be decayed
             'eps' : Epsilon value to prevent shooting of variance
     """
-    gamma = input_list[0]
-    beta = input_list[1]
-    params = input_list[2]
     mode = params.get('mode','train')
     momentum = params.get('momentum',0.9)
     running_mean = params.get('running_mean',np.zeros(x.shape[1]))
@@ -76,10 +72,9 @@ def batch_normalization_backward(dOut,cache):
     
     return dx,dgamma,dbeta
 
-def spatial_batch_forward(x,input_list):
+def spatial_batch_forward(x,gamma,beta,params):
     """
     Input:
-        input_list=[gamma,beta,params]
         x: Array of shape (N,C,H,W)
         gamma : Scale Parameter of shape (C,)
         beta : Shift Parameter of shape (C,)
@@ -90,9 +85,6 @@ def spatial_batch_forward(x,input_list):
             'momentum' : Rate at which mean and variance should be decayed
             'eps' : Epsilon value to prevent shooting of variance
     """
-    gamma= input_list[0]
-    beta = input_list[1]
-    params = input_list[2]
     N,C,H,W=x.shape
     #Reshapes array to N,H,W,C
     reshaped_x = np.swapaxes(np.swapaxes(x,1,2),2,3)

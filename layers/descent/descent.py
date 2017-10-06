@@ -8,6 +8,7 @@ def update_weight(W,dW,params):
             params: For Gradient Descent Method
            'alpha':learning_rate
            'method': 'gd' | 'momentum' | 'adagrad'  |'rmsprop' | 'partial_adam' | 'adam'
+           'epoch': Number of times to run gradient descent
            'momentum':  momentum (In momentum)
            'velocity' : gradient velocity for momentum method (In momentum)
            'grad_square' : sum of square of gradients (In rmsprop && adagrad)
@@ -71,7 +72,7 @@ def update_weight(W,dW,params):
         params["firstmoment"]=mu1
         params["secondmoment"]=mu2
         
-    else method == "adam":
+    elif method == "adam":
         
         beta1 = params.get("beta1",0.9)
         beta2 = params.get("beta2",0.999)
