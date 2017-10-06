@@ -6,12 +6,15 @@
 # from layers.util.loss import *
 from layers.layer import *
 from operator import mul
+import matplotlib.pyplot as plt
 import pickle
+
 class NN:
     
     def __init__(self,input_shape,update_params):
         self.J=[]
         self.layers=[]
+        self.accuracy=[]
         self.out_shape=[input_shape]
         self.update_params=update_params
         
@@ -147,7 +150,8 @@ class NN:
             self.J.append(inp)
             for layer in self.layers[::-1]:
                 inp = layer.backprop(inp)
-        
+            print("Cost at Iteration "+str(i)+" : "+str(self.J[-1]))
+
     def test(self,X):
         inp = X
         for layer in self.layers:
@@ -162,14 +166,22 @@ class NN:
     def load(filename):
         infile = open('models/'+filename,'rb')
         return pickle.load(infile)
+    
+    def plot(self):
+        plt.plot(self.J)
+        plt.show()
         
 if __name__== "__main__":
-    # model = NN(input_shape=(64,3,32,32),update_params={'alpha':1e-3,'method':'gd','epoch':1000})
-    # model.add("padding",padding_h=2,padding_w=2)
-    # model.add("convolution",num_kernels=128,kernel_h=3,kernel_w=3,convolution_params={"stride":1})
-    # model.add("flatten")
-    # model.add("affine",affine_out=10)
-    # model.add("softmax")
-    model = NN.load("model1.pkl")
+    model = NN(input_shape=(64,3,32,32),update_params={'alpha':1e-3,'method':'gd','epoch':10})
+    model.add("padding",padding_h=2,padding_w=2)
+    model.add("convolution",num_kernels=128,kernel_h=3,kernel_w=3,convolution_params={"stride":1})
+    model.add("flatten")
+    model.add("affine",affine_out=10)
+    model.add("softmax")
+    #model = NN.load("model1.pkl")
     print(model.layers)
     print(model.out_shape)
+    
+    X = np.random.rand(64,3,32,32)
+    y = np.random.randint(0,10,(64,))
+    model.train(X,y)
