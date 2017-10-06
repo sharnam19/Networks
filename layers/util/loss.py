@@ -13,11 +13,12 @@ def softmax_loss(x,y=None):
     shifted_x = x - maximum[:,np.newaxis]
     exp_x = np.exp(shifted_x)
     scores = exp_x/np.sum(exp_x,axis=1)[:,np.newaxis]
-    
+    print("========================")
+    print(scores)
+    print("========================")
     N,D = x.shape
     if y is None:
         return scores
-    
     loss = 0
     loss += np.sum(-np.log(scores[range(N),y]))/N
     

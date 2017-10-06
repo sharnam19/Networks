@@ -78,8 +78,9 @@ def update_weight(W,dW,params):
         beta2 = params.get("beta2",0.999)
         mu1 = params.get("firstmoment",0.0)
         mu2 = params.get("secondmoment",0.0)
+        offset = params.get("offset",1e-7)
         t = params.get("t",0)
-        
+        t+=1
         mu1 = beta1*mu1 + (1-beta1)*dW
         mu2 = beta2*mu2 + (1-beta2)*np.square(dW)
         unbias1 = mu1/(1-beta1**t)
@@ -89,6 +90,6 @@ def update_weight(W,dW,params):
         
         params["firstmoment"]=mu1
         params["secondmoment"]=mu2
-        params["t"]=t+1
+        params["t"]=t
     else:
         raise NotImplementedError

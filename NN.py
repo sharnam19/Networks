@@ -8,7 +8,7 @@ from layers.layer import *
 from operator import mul
 import matplotlib.pyplot as plt
 import pickle
-
+import json
 class NN:
     
     def __init__(self,input_shape,update_params):
@@ -141,11 +141,12 @@ class NN:
     
     def train(self,X,y):
         for i in range(self.update_params['epoch']):
-            inp = X
+            sample  = np.random.randint(0,X.shape[0],(self.out_shape[0][0],))
+            inp = X[sample]
             for layer in self.layers[:-1]:
                 inp = layer.forward(inp)
                 
-            inp = self.layers[-1].forward(inp,y)
+            inp = self.layers[-1].forward(inp,y[sample])
             
             self.J.append(inp)
             for layer in self.layers[::-1]:
@@ -172,16 +173,31 @@ class NN:
         plt.show()
         
 if __name__== "__main__":
-    model = NN(input_shape=(64,3,32,32),update_params={'alpha':1e-3,'method':'gd','epoch':10})
+    model = NN(input_shape=(64,3,50,50),update_params={'alpha':1e-5,'method':'adam','epoch':10,'offset':1e-7})
     model.add("padding",padding_h=2,padding_w=2)
+    model.add("convolution",num_kernels=64,kernel_h=3,kernel_w=3,convolution_params={"stride":1})
+    model.add("pooling",pooling_params={"pooling_height":2,"pooling_stride_height":2,
+                                        "pooling_stride_height":2,"pooling_stride_height":2})
+    model.add("relu")
     model.add("convolution",num_kernels=128,kernel_h=3,kernel_w=3,convolution_params={"stride":1})
+    model.add("pooling",pooling_params={"pooling_height":2,"pooling_stride_height":2,
+                                        "pooling_stride_height":2,"pooling_stride_height":2})
+    model.add("relu")
     model.add("flatten")
-    model.add("affine",affine_out=10)
-    model.add("softmax")
+    model.add("affine",affine_out=5)
+    model.add("svm")
     #model = NN.load("model1.pkl")
     print(model.layers)
     print(model.out_shape)
     
-    X = np.random.rand(64,3,32,32)
-    y = np.random.randint(0,10,(64,))
-    model.train(X,y)
+    data = json.load(open("data/data.json","rb"))
+    trainX = np.array(data['trainX'])
+    trainY = np.array(data['trainY'],dtype=np.int32)
+    #print(trainX)
+    #print(trainY.shape)
+    validX = np.array(data['validX'])
+    validY = np.array(data['validY'],dtype=np.int32)
+    
+    testX = np.array(data['testX'])
+    testY = np.array(data['testY'],dtype=np.int32)
+    model.train(trainX,trainY)
