@@ -6,7 +6,7 @@
 # from layers.util.loss import *
 from layers.layer import *
 from operator import mul
-
+import pickle
 class NN:
     
     def __init__(self,input_shape,update_params):
@@ -136,7 +136,7 @@ class NN:
             raise NotImplementedError
     
     
-    def train(X,y):
+    def train(self,X,y):
         for i in range(self.update_params['epoch']):
             inp = X
             for layer in self.layers[:-1]:
@@ -148,13 +148,28 @@ class NN:
             for layer in self.layers[::-1]:
                 inp = layer.backprop(inp)
         
+    def test(self,X):
+        inp = X
+        for layer in self.layers:
+            inp = layer.forward(inp)
+        return inp
+    
+    def save(self,filename):
+        outfile = open('models/'+filename, 'wb')
+        pickle.dump(self,outfile)
+    
+    @staticmethod
+    def load(filename):
+        infile = open('models/'+filename,'rb')
+        return pickle.load(infile)
+        
 if __name__== "__main__":
-    model = NN(input_shape=(64,3,32,32),update_params={'alpha':1e-3,'method':'gd','epoch':1000})
-    model.add("padding",padding_h=2,padding_w=2)
-    model.add("convolution",num_kernels=128,kernel_h=3,kernel_w=3,convolution_params={"stride":1})
-    model.add("flatten")
-    model.add("affine",affine_out=10)
-    model.add("softmax")
+    # model = NN(input_shape=(64,3,32,32),update_params={'alpha':1e-3,'method':'gd','epoch':1000})
+    # model.add("padding",padding_h=2,padding_w=2)
+    # model.add("convolution",num_kernels=128,kernel_h=3,kernel_w=3,convolution_params={"stride":1})
+    # model.add("flatten")
+    # model.add("affine",affine_out=10)
+    # model.add("softmax")
+    model = NN.load("model1.pkl")
     print(model.layers)
     print(model.out_shape)
-            
