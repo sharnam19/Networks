@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import pickle
+import json
 data_dir = ["none","fist","hand","one","peace"]
 
 allX=None
@@ -37,12 +38,12 @@ testX = allX[3500:]
 testY = allY[3500:]
 
 data = {
-    "trainX":trainX,
-    "trainY":trainY,
-    "validX":validationX,
-    "validY":validationY,
-    "testX":testX,
-    "testY":testY
+    "trainX":trainX.tolist(),
+    "trainY":trainY.tolist(),
+    "validX":validationX.tolist(),
+    "validY":validationY.tolist(),
+    "testX":testX.tolist(),
+    "testY":testY.tolist()
 }
 
-pickle.dump(data,open("data/data.pkl","wb"))
+json.dump(data,open("data/data.json","wb"))
