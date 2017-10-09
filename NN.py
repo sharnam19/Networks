@@ -165,7 +165,10 @@ class NN:
             print("Cost at Iteration "+str(i)+" : "+str(self.J[-1]))
             print("Accuracy at Iteration "+str(i)+" : "+str(self.accuracies[-1]))
                   
-    def test(self,X,y, accuracies = self.accuracies,costs= self.J):
+    def test(self,X,y, accuracies = None,costs= None):
+        if accuracies = None:
+            accuracies = self.accuracies
+            costs = self.J
         loss = 0.0
         inp = X
         for layer in self.layers[:-1]:
