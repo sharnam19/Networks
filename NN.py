@@ -144,7 +144,7 @@ class NN:
     
     
     def train(self,X,y):
-        self.test(X,y)
+        self.test(X[:64],y[:64])
         print("Initial Cost :"+str(self.J[-1]))
         print("Initial Accuracy :"+str(self.accuracies[-1]))
         
