@@ -1,7 +1,7 @@
 # Modular Neural Network Library
 Neural Networks From Scratch. The Library was Trained & Tested on Gesture Recognition dataset created by <a href="https://github.com/ankitesh97">Ankitesh Gupta</a>
 
-The images were Normalized using the <b>Mean Pixel Value</b> and the <b>Standard Deviation of the Pixel Value</b> before giving it to the model for <b>Training and Testing</b>
+The images were Normalized using the <b>Mean Pixel Value</b> and the <b>Standard Deviation of the Pixel Value</b> before giving it to the model for <b>Training and Testing.</b> The code for normalizing the data is in preprocess.py
 
 ### Example Usage
 <pre>
@@ -103,8 +103,8 @@ iii) Stride Height : 2 \
 
 After <b>100 Epochs</b> The Model Performance is:
 
-<b>Training Accuracy is 100%</b>
+<b>Training Accuracy: 100%</b>
 
-<b>Validation Accuracy is 100%</b>
+<b>Validation Accuracy: 100%</b>
 
 <b>Test Accuracy:  99.8%</b>
