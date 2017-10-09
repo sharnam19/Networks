@@ -206,12 +206,12 @@ if __name__== "__main__":
     model = NN(input_shape=(64,1,50,50),update_params={'alpha':1e-3,'method':'adam','epoch':100,'offset':1e-7,'reg':0.01,'reg_type':'L2'},initialization="xavier2")
     model.add("padding",padding_h=2,padding_w=2)
     model.add("convolution",num_kernels=64,kernel_h=3,kernel_w=3,convolution_params={"stride":1})
-    model.add("pooling",pooling_params={"pooling_height":2,"pooling_stride_height":2,
-                                        "pooling_stride_height":2,"pooling_stride_height":2})
+    model.add("pooling",pooling_params={"pooling_height":2,"pooling_width":2,
+                                        "pooling_stride_height":2,"pooling_stride_width":2})
     model.add("relu")
     model.add("convolution",num_kernels=128,kernel_h=3,kernel_w=3,convolution_params={"stride":1})
-    model.add("pooling",pooling_params={"pooling_height":2,"pooling_stride_height":2,
-                                        "pooling_stride_height":2,"pooling_stride_height":2})
+    model.add("pooling",pooling_params={"pooling_height":2,"pooling_width":2,
+                                        "pooling_stride_height":2,"pooling_stride_width":2})
     
     model.add("relu")
     model.add("flatten")
