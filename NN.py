@@ -178,7 +178,7 @@ class NN:
         self.accuracies.append(self.accuracy(scores,y))
         self.J.append(inp+loss)
         
-    def accuracy(scores,y):
+    def accuracy(self,scores,y):
         return 1.0*np.sum(np.argmax(scores,axis=1)==y)/y.shape[0]
     
     def predict(self,X):
