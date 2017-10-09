@@ -108,3 +108,10 @@ After <b>100 Epochs</b> The Model Performance is:
 <b>Validation Accuracy: 100%</b>
 
 <b>Test Accuracy:  99.8%</b>
+
+### Model File
+The Model file can be downloaded from <a href="https://drive.google.com/open?id=0B6OWaNVUCQvaeWo3aTJoWlpOdWM">here</a>
+
+Extract it in models folder &
+Load the model file as follows: \
+<pre>model  = NN.load("model1.json")</pre>
