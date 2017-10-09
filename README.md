@@ -99,10 +99,10 @@ iii) Stride Height : 2 \
 
 14) Softmax Layer
 
-After <b>100 Epochs</b> The Model Performance is: \
+After <b>100 Epochs</b> The Model Performance is: 
 
-<b>Training Accuracy is 100%</b>\
+<b>Training Accuracy is 100%</b>
 
-<b>Validation Accuracy is 100%</b>\
+<b>Validation Accuracy is 100%</b>
 
 <b>Test Accuracy:  99.8%</b>
