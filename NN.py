@@ -173,7 +173,6 @@ class NN:
         inp = X
         for layer in self.layers[:-1]:
             inp = layer.forward(inp)
-            print(layer)
             loss += layer.loss_reg()
         
         scores,inp = self.layers[-1].forward(inp,y)

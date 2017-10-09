@@ -20,11 +20,17 @@ if __name__ == "__main__":
     model = NN.load("model1.pkl")
 
     data = json.load(open("data/data.json","rb"))
-    
+
+    trainX = np.array(data['trainX'])
+    trainY = np.array(data['trainY'],dtype=np.int32)
     validX = np.array(data['validX'])
     validY = np.array(data['validY'],dtype=np.int32)
-    
     testX = np.array(data['testX'])
     testY = np.array(data['testY'],dtype=np.int32)
-    
+
+    print("TRAIN SET")
+    test(trainX,trainY)
+    print("\n\nVALIDATION SET")
+    test(validX,validY)
+    print("\n\nTEST SET")
     test(testX,testY)
