@@ -144,24 +144,49 @@ class NN:
     
     
     def train(self,X,y):
+        self.test(X,y)
+        self.J=[]
+        self.accuracy=[]
+        print("Initial Cost :"+str(self.J[-1]))
+        print("Initial Accuracy :"+str(self.accuracy[-1]))
+        
         for i in range(self.update_params['epoch']):
             sample  = np.random.randint(0,X.shape[0],(self.out_shape[0][0],))
             inp = X[sample]
+            loss = 0.0
             for layer in self.layers[:-1]:
                 inp = layer.forward(inp)
-                
-            inp = self.layers[-1].forward(inp,y[sample])
+                loss += layer.loss_reg()
             
-            self.J.append(inp)
+            scores,inp = self.layers[-1].forward(inp,y[sample])
+            
             for layer in self.layers[::-1]:
                 inp = layer.backprop(inp)
+            
+            self.test(X[sample],y[sample])
             print("Cost at Iteration "+str(i)+" : "+str(self.J[-1]))
-
-    def test(self,X):
+            print("Accuracy at Iteration "+str(i)+" : "+str(self.accuracy[-1]))
+                  
+    def test(self,X,y):
+        loss = 0.0
+        inp = X
+        for layer in self.layers[:-1]:
+            inp = layer.forward(inp)
+            loss += layer.loss_reg()
+        
+        scores,inp = self.layers[-1].forward(inp,y)
+        self.accuracy.append(accuracy(scores,y))
+        self.J.append(inp+loss)
+        
+    def accuracy(scores,y):
+        return 1.0*np.sum(np.argmax(scores,axis=1)==y)/y.shape[0]
+    
+    def predict(self,X):
         inp = X
         for layer in self.layers:
             inp = layer.forward(inp)
-        return inp
+            
+        return np.argmax(inp,axis=1)
     
     def save(self,filename):
         outfile = open('models/'+filename, 'wb')
@@ -177,20 +202,21 @@ class NN:
         plt.show()
         
 if __name__== "__main__":
-    model = NN(input_shape=(64,1,50,50),update_params={'alpha':1e-6,'method':'adam','epoch':10,'offset':1e-7},initialization="xavier2")
+    model = NN(input_shape=(64,1,50,50),update_params={'alpha':1e-6,'method':'adam','epoch':10,'offset':1e-7,'reg':0.01,'reg_type':'L2'},initialization="xavier2")
     model.add("padding",padding_h=2,padding_w=2)
     model.add("convolution",num_kernels=64,kernel_h=3,kernel_w=3,convolution_params={"stride":1})
     model.add("pooling",pooling_params={"pooling_height":2,"pooling_stride_height":2,
                                         "pooling_stride_height":2,"pooling_stride_height":2})
     model.add("relu")
-    model.add("convolution",num_kernels=128,kernel_h=3,kernel_w=3,convolution_params={"stride":1})
-    model.add("pooling",pooling_params={"pooling_height":2,"pooling_stride_height":2,
+    #model.add("convolution",num_kernels=128,kernel_h=3,kernel_w=3,convolution_params={"stride":1})
+    '''model.add("pooling",pooling_params={"pooling_height":2,"pooling_stride_height":2,
                                         "pooling_stride_height":2,"pooling_stride_height":2})
-    model.add("relu")
+    '''
+    #model.add("relu")
     model.add("flatten")
-    model.add("affine",affine_out=128)
-    model.add("affine",affine_out=64)
-    model.add("affine",affine_out=16)
+    #model.add("affine",affine_out=128)
+    #model.add("affine",affine_out=64)
+    #model.add("affine",affine_out=16)
     model.add("affine",affine_out=5)
     model.add("softmax")
     

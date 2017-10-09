@@ -7,6 +7,18 @@ from util.loss import *
 from descent.descent import *
 import numpy as np
 import copy
+
+def regularization(weight,params):
+    reg = params.get('reg',0.0)
+    reg_type = params.get('reg_type','None')
+    
+    if reg_type is not 'None':
+        reg = params.get('reg',0.0)
+        if reg_type is 'L2':
+            return reg*np.sum(np.square(weight))
+        elif reg_type is 'L1':
+            return reg*np.sum(np.abs(weight))
+    
 class Padding():
     
     def __init__(self,padding_h,padding_w):
@@ -14,6 +26,9 @@ class Padding():
     
     def forward(self,X):
         return padding_forward(X,self.padding[0],self.padding[1])
+    
+    def loss_reg(self):
+        return 0.0
     
     def backprop(self,dOut):
         return padding_backward(dOut,self.padding)
@@ -27,6 +42,9 @@ class Pooling():
     def forward(self,X):
         out,self.cache = max_pooling_forward(X,self.pooling_params)
         return out
+    
+    def loss_reg(self):
+        return 0.0
     
     def backprop(self,dOut):
         return max_pooling_backward(dOut,self.cache)
@@ -44,9 +62,12 @@ class Convolution():
         out,self.cache = convolve_forward_fast(X,self.w,self.b,self.convolution_params)
         return out
     
+    def loss_reg(self):
+        return regularization(self.w,self.wparams)
+    
     def backprop(self,dOut):
         dx,dw,db = convolve_backward_fast(dOut,self.cache)
-        update_weight(self.w,dw,self.wparams)
+        update_weight(self.w,dw,self.wparams,regularization=True)
         update_weight(self.b,db,self.bparams)
         return dx
 
@@ -58,6 +79,9 @@ class Relu():
     def forward(self,X):
         out,self.cache = relu_forward(X)
         return out
+    
+    def loss_reg(self):
+        return 0.0
     
     def backprop(self,dOut):
         return relu_backward(dOut,self.cache)
@@ -71,6 +95,9 @@ class Sigmoid():
         out,self.cache = sigmoid_forward(X)
         return out
     
+    def loss_reg(self):
+        return 0.0
+    
     def backprop(self,dOut):
         return sigmoid_backward(dOut,self.cache)
     
@@ -83,6 +110,9 @@ class Tanh():
         out,self.cache = tanh_forward(X)
         return out
     
+    def loss_reg(self):
+        return 0.0
+    
     def backprop(self,dOut):
         return tanh_backward(dOut,self.cache)
 
@@ -94,6 +124,9 @@ class LeakyRelu():
     def forward(self,X):
         out,self.cache = leaky_relu_forward(X)
         return out
+    
+    def loss_reg(self):
+        return 0.0
     
     def backprop(self,dOut):
         return leaky_relu_backward(dOut,self.cache)
@@ -111,9 +144,12 @@ class Affine():
         out, self.cache = affine_forward(X,self.w,self.b)
         return out
     
+    def loss_reg(self):
+        return regularization(self.w,self.wparams)
+    
     def backprop(self,dOut):
         dx,dw,db = affine_backward(dOut,self.cache)
-        update_weight(self.w,dw,self.wparams)
+        update_weight(self.w,dw,self.wparams,regularization=True)
         update_weight(self.b,db,self.bparams)
         return dx
 
@@ -126,6 +162,9 @@ class Flatten():
         out,self.cache = flatten_forward(X)
         return out
     
+    def loss_reg(self):
+        return 0.0
+    
     def backprop(self,dOut):
         return flatten_backward(dOut,self.cache)
     
@@ -136,8 +175,15 @@ class Softmax():
         self.dx= None
     
     def forward(self,X,y=None):
-        loss,self.dx = softmax_loss(X,y)
-        return loss
+        if y is None:
+            scores = softmax_loss(X)
+            return scores
+        else:
+            scores,loss,self.dx = softmax_loss(X,y)
+            return scores,loss
+    
+    def loss_reg(self):
+        return 0.0
     
     def backprop(self,dOut=None):
         return self.dx
@@ -148,8 +194,15 @@ class SVM():
         self.dx= None
     
     def forward(self,X,y=None):
-        loss,self.dx = svm_loss(X,y)
-        return loss
+        if y is None:
+            scores = softmax_loss(X)
+            return scores
+        else:
+            scores,loss,self.dx = svm_loss(X,y)
+            return scores,loss
+    
+    def loss_reg(self):
+        return 0.0
     
     def backprop(self,dOut=None):
         return self.dx
@@ -167,6 +220,9 @@ class BatchNormalization():
     def forward(self,X):
         out,self.cache = batch_normalization_forward(X,self.gamma,self.beta,self.params)
         return out
+    
+    def loss_reg(self):
+        return 0.0
     
     def backprop(self,dOut):
         dx,dgamma,dbeta = batch_normalization_backward(dOut,self.cache)
@@ -187,6 +243,9 @@ class SpatialBatchNormalization():
     def forward(self,X):
         out,self.cache = spatial_batch_forward(X,self.gamma,self.beta,self.params)
         return out
+    
+    def loss_reg(self):
+        return 0.0
     
     def backprop(self,dOut):
         dx,dgamma,dbeta = spatial_batch_backward(dOut,self.cache)

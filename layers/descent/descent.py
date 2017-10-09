@@ -1,12 +1,14 @@
 import numpy as np
 
-def update_weight(W,dW,params):
+def update_weight(W,dW,params,regularization=False):
     """
         Input:
             W: Initial Weights
             dW: Gradient wrt Weights
             params: For Gradient Descent Method
            'alpha':learning_rate
+           'reg' : regularization constant
+           'reg_type':'None/L1'/'L2'
            'method': 'gd' | 'momentum' | 'adagrad'  |'rmsprop' | 'partial_adam' | 'adam'
            'epoch': Number of times to run gradient descent
            'momentum':  momentum (In momentum)
@@ -22,6 +24,13 @@ def update_weight(W,dW,params):
     """
     alpha = params.get('alpha',0)
     method = params.get('method',"gd")
+    reg_type = params.get('reg_type','None')
+    if reg_type is not 'None':
+        reg = params.get('reg',0.0)
+        if reg_type is 'L2':
+            dW += 2*reg*W
+        elif reg_type is 'L1':
+            dW +=2*reg
     
     if method == "gd":
     

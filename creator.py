@@ -27,10 +27,10 @@ np.random.shuffle(s)
 allX = allX[s]
 allY = allY[s]
 
-max_im = np.max(allX)
-min_im = np.min(allX)
+mean_px = np.mean(allX)
+std_px = np.std(allX)
 #print(mean_im.shape)
-allX = 2.0*(allX - min_im)/(max_im-min_im) + min_im
+allX = (allX - mean_px)/std_px
 
 print(allY)
 

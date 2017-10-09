@@ -13,9 +13,6 @@ def softmax_loss(x,y=None):
     shifted_x = x - maximum[:,np.newaxis]
     exp_x = np.exp(shifted_x)
     scores = exp_x/np.sum(exp_x,axis=1)[:,np.newaxis]
-    print("========================")
-    print(scores)
-    print("========================")
     N,D = x.shape
     if y is None:
         return scores
@@ -25,7 +22,7 @@ def softmax_loss(x,y=None):
     offset = np.zeros_like(scores)
     offset[range(N),y]=1
     dx = (scores-offset)/N
-    return loss,dx
+    return scores,loss,dx
 
 def svm_loss(x,y=None):
     """
@@ -38,6 +35,7 @@ def svm_loss(x,y=None):
             dx  : SVM Loss wrt input. Same shape as x
     """
     scores = x
+    toRet = copy.deepcopy(scores)
     if y is None:
         return scores
     
@@ -52,4 +50,4 @@ def svm_loss(x,y=None):
     row_sum = np.sum(ones,axis=1)
     ones[range(N),y]=-row_sum
     dx = ones/N
-    return loss,dx
+    return toRet,loss,dx
