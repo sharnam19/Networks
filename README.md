@@ -19,7 +19,7 @@ update_params={
 <pre>model.add("padding",padding_h=3,padding_w=3)</pre>
 
 ### To Add Convolution Layer
-<pre>model.add("convolution",num_kernels=64,kernel_h=3,kernel_w=3,\
+<pre>model.add("convolution",num_kernels=64,kernel_h=3,kernel_w=3,
 convolution_params:{
     'stride':1
   })
