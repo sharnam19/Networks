@@ -14,7 +14,7 @@ class NN:
     def __init__(self,input_shape,update_params,initialization="normal"):
         self.J=[]
         self.layers=[]
-        self.accuracy=[]
+        self.accuracies=[]
         self.out_shape=[input_shape]
         self.update_params=update_params
         self.initialization = initialization
@@ -146,9 +146,9 @@ class NN:
     def train(self,X,y):
         self.test(X,y)
         self.J=[]
-        self.accuracy=[]
+        self.accuracies=[]
         print("Initial Cost :"+str(self.J[-1]))
-        print("Initial Accuracy :"+str(self.accuracy[-1]))
+        print("Initial Accuracy :"+str(self.accuracies[-1]))
         
         for i in range(self.update_params['epoch']):
             sample  = np.random.randint(0,X.shape[0],(self.out_shape[0][0],))
@@ -165,7 +165,7 @@ class NN:
             
             self.test(X[sample],y[sample])
             print("Cost at Iteration "+str(i)+" : "+str(self.J[-1]))
-            print("Accuracy at Iteration "+str(i)+" : "+str(self.accuracy[-1]))
+            print("Accuracy at Iteration "+str(i)+" : "+str(self.accuracies[-1]))
                   
     def test(self,X,y):
         loss = 0.0
@@ -175,7 +175,7 @@ class NN:
             loss += layer.loss_reg()
         
         scores,inp = self.layers[-1].forward(inp,y)
-        self.accuracy.append(accuracy(scores,y))
+        self.accuracies.append(self.accuracy(scores,y))
         self.J.append(inp+loss)
         
     def accuracy(scores,y):
