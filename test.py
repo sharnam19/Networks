@@ -9,7 +9,7 @@ def test(X,y):
     costs = []
     for i in range(0,X.shape[0],64):
         end = min(i+64,X.shape[0])
-        model.test(X[i:end],y[i:end],accuracies,cost)
+        model.test(X[i:end],y[i:end],accuracies,costs)
     
     accuracies = np.array(accuracies)
     costs = np.array(costs)
