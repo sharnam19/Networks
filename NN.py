@@ -166,7 +166,7 @@ class NN:
             print("Accuracy at Iteration "+str(i)+" : "+str(self.accuracies[-1]))
                   
     def test(self,X,y, accuracies = None,costs= None):
-        if accuracies = None:
+        if accuracies is None:
             accuracies = self.accuracies
             costs = self.J
         loss = 0.0
