@@ -9,6 +9,10 @@ from operator import mul
 import matplotlib.pyplot as plt
 import pickle
 import json
+import jsonpickle
+import jsonpickle.ext.numpy as jsonpickle_numpy
+
+jsonpickle_numpy.register_handlers()
 class NN:
     
     def __init__(self,input_shape,update_params,initialization="normal"):
@@ -191,12 +195,13 @@ class NN:
     
     def save(self,filename):
         outfile = open('models/'+filename, 'wb')
-        pickle.dump(self,outfile)
+        enc = jsonpickle.encode(self)
+        json.dump(enc,outfile)
     
     @staticmethod
     def load(filename):
         infile = open('models/'+filename,'rb')
-        return pickle.load(infile)
+        return jsonpickle.decode(json.load(infile))
     
     def plot(self):
         plt.plot(self.J)

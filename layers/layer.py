@@ -51,7 +51,9 @@ class Pooling():
         return 0.0
     
     def backprop(self,dOut):
-        return max_pooling_backward(dOut,self.cache)
+        out =  max_pooling_backward(dOut,self.cache)
+        self.cache = None
+        return out
 
 class Convolution():
     
@@ -73,6 +75,7 @@ class Convolution():
         dx,dw,db = convolve_backward_fast(dOut,self.cache)
         update_weight(self.w,dw,self.wparams,regularization=True)
         update_weight(self.b,db,self.bparams)
+        self.cache = None
         return dx
 
 class Relu():
@@ -88,7 +91,9 @@ class Relu():
         return 0.0
     
     def backprop(self,dOut):
-        return relu_backward(dOut,self.cache)
+        out= relu_backward(dOut,self.cache)
+        self.cache = None
+        return out
     
 class Sigmoid():
     
@@ -103,7 +108,9 @@ class Sigmoid():
         return 0.0
     
     def backprop(self,dOut):
-        return sigmoid_backward(dOut,self.cache)
+        out= sigmoid_backward(dOut,self.cache)
+        self.cache = None
+        return out
     
 class Tanh():
     
@@ -118,7 +125,9 @@ class Tanh():
         return 0.0
     
     def backprop(self,dOut):
-        return tanh_backward(dOut,self.cache)
+        out = tanh_backward(dOut,self.cache)
+        self.cache = None
+        return out
 
 class LeakyRelu():
     
@@ -133,7 +142,9 @@ class LeakyRelu():
         return 0.0
     
     def backprop(self,dOut):
-        return leaky_relu_backward(dOut,self.cache)
+        out = leaky_relu_backward(dOut,self.cache)
+        self.cache = None
+        return out
     
 class Affine():
     
@@ -155,6 +166,7 @@ class Affine():
         dx,dw,db = affine_backward(dOut,self.cache)
         update_weight(self.w,dw,self.wparams,regularization=True)
         update_weight(self.b,db,self.bparams)
+        self.cache = None
         return dx
 
 class Flatten():
@@ -170,7 +182,9 @@ class Flatten():
         return 0.0
     
     def backprop(self,dOut):
-        return flatten_backward(dOut,self.cache)
+        out= flatten_backward(dOut,self.cache)
+        self.cache = None
+        return out
     
 
 class Softmax():
@@ -232,6 +246,7 @@ class BatchNormalization():
         dx,dgamma,dbeta = batch_normalization_backward(dOut,self.cache)
         update_weight(self.gamma,dgamma,self.gamma_update_params)
         update_weight(self.beta,dbeta,self.beta_update_params)
+        self.cache = None
         return dx
 
 class SpatialBatchNormalization():
@@ -255,4 +270,5 @@ class SpatialBatchNormalization():
         dx,dgamma,dbeta = spatial_batch_backward(dOut,self.cache)
         update_weight(self.gamma,dgamma,self.gamma_update_params)
         update_weight(self.beta,dbeta,self.beta_update_params)
+        self.cache = None
         return dx        
