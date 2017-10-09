@@ -3,14 +3,14 @@ Neural Networks From Scratch. The Library was Trained & Tested on Gesture Recogn
 
 ### Example Usage
 <pre>
-model  = NN(input_shape=(64,1,50,50),initialization="xavier2",\
+model  = NN(input_shape=(64,1,50,50),initialization="xavier2",
 update_params={
-  'alpha':1e-3,\
-  'method':'adam',\
-  'epoch':100,\
-  'reg':0.01,\
-  'reg_type':'L2',\
-  'offset':'1e-7'\
+  'alpha':1e-3,
+  'method':'adam',
+  'epoch':100,
+  'reg':0.01,
+  'reg_type':'L2',
+  'offset':'1e-7'
 })</pre>
 
 ### To Add Padding Layer
@@ -18,8 +18,8 @@ update_params={
 
 ### To Add Convolution Layer
 <pre>model.add("convolution",num_kernels=64,kernel_h=3,kernel_w=3,\
-convolution_params:{\
-    'stride':1\
+convolution_params:{
+    'stride':1
   })
 </pre>
 ### To Add Relu Layer
@@ -27,10 +27,10 @@ convolution_params:{\
 
 ### To Add Pooling Layer
 <pre>model.add("pooling",pooling_params={
-  "pooling_height":2,\
-  "pooling_width":2,\
-  "pooling_stride_height":2,\
-  'pooling_stide_width':2 \
+  "pooling_height":2,
+  "pooling_width":2,
+  "pooling_stride_height":2,
+  'pooling_stide_width':2
   })
 </pre>
 ### To Add a Flatten Layer
