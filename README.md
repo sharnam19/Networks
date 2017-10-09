@@ -1,7 +1,7 @@
 # Modular Neural Network Library
 Neural Networks From Scratch. The Library was Trained & Tested on Gesture Recognition dataset created by <a href="https://github.com/ankitesh97">Ankitesh Gupta</a>
 
-The images were Normalized using the <b>Mean Pixel Value</b> and the <b>Standard Deviation of the Pixel Value</b> before giving it to the model for <b>Training and Testing</b> 
+The images were Normalized using the <b>Mean Pixel Value</b> and the <b>Standard Deviation of the Pixel Value</b> before giving it to the model for <b>Training and Testing</b>
 
 ### Example Usage
 <pre>
@@ -12,7 +12,7 @@ update_params={
   'epoch':100,
   'reg':0.01,
   'reg_type':'L2',
-  'offset':'1e-7'
+  'offset':1e-7
 })</pre>
 
 ### To Add Padding Layer
