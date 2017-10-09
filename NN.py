@@ -11,12 +11,13 @@ import pickle
 import json
 class NN:
     
-    def __init__(self,input_shape,update_params):
+    def __init__(self,input_shape,update_params,initialization="normal"):
         self.J=[]
         self.layers=[]
         self.accuracy=[]
         self.out_shape=[input_shape]
         self.update_params=update_params
+        self.initialization = initialization
         
     def initializer(self,mean=0,shift=0.01,shape=None,initialization="normal"):
         if initialization == "normal":
@@ -24,7 +25,10 @@ class NN:
         elif initialization == "xavier":
             init = np.random.standard_normal(shape)/(shape[0]**0.5)
         elif initialization == "xavier2":
-            init = np.random.standard_normal(shape)/((shape[0]/2)**0.5)
+            if len(shape)==2:
+                init = np.random.standard_normal(shape)/((shape[0]/2.)**0.5)
+            elif len(shape)==4:
+                init = np.random.standard_normal(shape)/((reduce(mul,shape[1:],1)/2.)**0.5)
         return init
 
     def add(self,layer_name,affine_out=None,
@@ -33,14 +37,14 @@ class NN:
             num_kernels=None,kernel_h=None,kernel_w=None,convolution_params=None,
             batch_params=None,
             output=None,
-            initialization="normal",mean=0,shift=0.01):
+            mean=0,shift=0.01):
         
         outshape = len(self.out_shape[-1])
         
         if layer_name == "affine" and outshape==2:
             
             N,D = self.out_shape[-1]
-            W = self.initializer(mean,shift,(D,affine_out),initialization=initialization)
+            W = self.initializer(mean,shift,(D,affine_out),initialization=self.initialization)
             b = np.zeros(affine_out,)
             self.layers.append(Affine(W,b,self.update_params))
             self.out_shape.append((N,affine_out))
@@ -103,7 +107,7 @@ class NN:
             Hout = abs(H-kernel_h)//S + 1
             Wout = abs(W-kernel_w)//S + 1
         
-            W = self.initializer(mean,shift,(num_kernels,C,kernel_h,kernel_w))
+            W = self.initializer(mean,shift,(num_kernels,C,kernel_h,kernel_w),initialization=self.initialization)
             b = np.zeros((num_kernels,))
             self.layers.append(Convolution(W,b,convolution_params,self.update_params))
             self.out_shape.append((N,num_kernels,Hout,Wout))
@@ -173,7 +177,7 @@ class NN:
         plt.show()
         
 if __name__== "__main__":
-    model = NN(input_shape=(64,3,50,50),update_params={'alpha':1e-5,'method':'adam','epoch':10,'offset':1e-7})
+    model = NN(input_shape=(64,1,50,50),update_params={'alpha':1e-6,'method':'adam','epoch':10,'offset':1e-7},initialization="xavier2")
     model.add("padding",padding_h=2,padding_w=2)
     model.add("convolution",num_kernels=64,kernel_h=3,kernel_w=3,convolution_params={"stride":1})
     model.add("pooling",pooling_params={"pooling_height":2,"pooling_stride_height":2,
@@ -184,20 +188,20 @@ if __name__== "__main__":
                                         "pooling_stride_height":2,"pooling_stride_height":2})
     model.add("relu")
     model.add("flatten")
+    model.add("affine",affine_out=128)
+    model.add("affine",affine_out=64)
+    model.add("affine",affine_out=16)
     model.add("affine",affine_out=5)
-    model.add("svm")
-    #model = NN.load("model1.pkl")
-    print(model.layers)
-    print(model.out_shape)
+    model.add("softmax")
     
     data = json.load(open("data/data.json","rb"))
     trainX = np.array(data['trainX'])
     trainY = np.array(data['trainY'],dtype=np.int32)
-    #print(trainX)
-    #print(trainY.shape)
+    
     validX = np.array(data['validX'])
     validY = np.array(data['validY'],dtype=np.int32)
     
     testX = np.array(data['testX'])
     testY = np.array(data['testY'],dtype=np.int32)
     model.train(trainX,trainY)
+    model.save("model1.pkl")

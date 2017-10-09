@@ -26,6 +26,12 @@ s = range(allX.shape[0])
 np.random.shuffle(s)
 allX = allX[s]
 allY = allY[s]
+
+max_im = np.max(allX)
+min_im = np.min(allX)
+#print(mean_im.shape)
+allX = 2.0*(allX - min_im)/(max_im-min_im) + min_im
+
 print(allY)
 
 trainX = allX[:3000]
