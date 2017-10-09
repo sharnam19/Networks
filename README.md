@@ -113,5 +113,5 @@ After <b>100 Epochs</b> The Model Performance is:
 The Model file can be downloaded from <a href="https://drive.google.com/open?id=0B6OWaNVUCQvaeWo3aTJoWlpOdWM">here</a>
 
 Extract it in models folder &
-Load the model file as follows: \
+Load the model file as follows: 
 <pre>model  = NN.load("model1.json")</pre>
