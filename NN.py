@@ -204,5 +204,5 @@ class NN:
         return jsonpickle.decode(json.load(infile))
     
     def plot(self):
-        plt.plot(self.J)
+        plt.plot(self.J[1:])
         plt.show()

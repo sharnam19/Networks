@@ -109,9 +109,12 @@ After <b>100 Epochs</b> The Model Performance is:
 
 <b>Test Accuracy:  99.8%</b>
 
+### Loss-Iteration Curve
+![Loss-Iteration Curve for 100 Epochs](/Loss_Curve.png)
+
 ### Model File
 The Model file can be downloaded from <a href="https://drive.google.com/open?id=0B6OWaNVUCQvaeWo3aTJoWlpOdWM">here</a>
 
 Extract it in models folder &
-Load the model file as follows: 
+Load the model file as follows:
 <pre>model  = NN.load("model1.json")</pre>
