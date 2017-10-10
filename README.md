@@ -26,7 +26,7 @@ batch_params={
   'eps':1e-8
   }</pre>
 ### 2. Spatial Batch Normalization Layer
-batch_params={
+<pre>batch_params={
   'mode':'train'/'test',
   'momentum':0.9,
   'eps':1e-8
@@ -72,7 +72,7 @@ padding_w=2
 ### 2. Flatten Layer
 <pre>No params</pre>
 
-### Example Usage
+# Example Usage
 <pre>
 model  = NN(input_shape=(64,1,50,50),initialization="xavier2",
 update_params={
