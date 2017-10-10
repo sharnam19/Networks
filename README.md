@@ -3,6 +3,75 @@ Neural Networks From Scratch. The Library was Trained & Tested on Gesture Recogn
 
 The images were Normalized using the <b>Mean Pixel Value</b> and the <b>Standard Deviation of the Pixel Value</b> before giving it to the model for <b>Training and Testing.</b> The code for normalizing the data is in preprocess.py
 
+# Layers in the Library & their Parameters in Add function
+
+## Activation Layers
+
+### 1. Relu Layer
+<pre>No Params</pre>
+### 2. Sigmoid Layer
+<pre>No Params</pre>
+### 3. Tanh Layer
+<pre>No Params</pre>
+### 4. Leaky Relu Layer
+<pre>No Params</pre>
+
+## Normalization Layers
+
+### 1. Batch Normalization Layer
+<pre>
+batch_params={
+  'mode':'train'/'test',
+  'momentum':0.9,
+  'eps':1e-8
+  }</pre>
+### 2. Spatial Batch Normalization Layer
+batch_params={
+  'mode':'train'/'test',
+  'momentum':0.9,
+  'eps':1e-8
+  }</pre>
+
+## Convolution Layers
+
+### 1. Max Pooling Layer
+<pre>
+pooling_params={
+  'pooling_height':2,
+  'pooling_width':2,
+  'pooling_stride_height':2,
+  'pooling_stride_width':2
+}
+</pre>
+### 2. Convolution Layer
+<pre>
+num_kernels=64,
+kernel_h=3,
+kernel_w=3,
+convolution_params={
+  'stride':1
+}
+</pre>
+### 3. Padding Layer
+<pre>
+padding_h=2,
+padding_w=2
+</pre>
+
+## Loss Layers
+
+### 1. Softmax Loss Layer
+<pre>No params</pre>
+### 2. SVM Loss Layer
+<pre>No params</pre>
+
+### Fully Connected Layer
+
+### 1. Affine Layer
+<pre>affine_out = 64</pre>
+### 2. Flatten Layer
+<pre>No params</pre>
+
 ### Example Usage
 <pre>
 model  = NN(input_shape=(64,1,50,50),initialization="xavier2",
@@ -25,7 +94,7 @@ convolution_params:{
   })
 </pre>
 ### To Add Relu Layer
-<pre>model.add("Relu")</pre>
+<pre>model.add("relu")</pre>
 
 ### To Add Pooling Layer
 <pre>model.add("pooling",pooling_params={
