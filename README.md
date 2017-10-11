@@ -114,10 +114,10 @@ convolution_params:{
 <pre>model.add("softmax")</pre>
 
 ### To Save Model
-<pre>model.save("model.pkl")</pre>
+<pre>model.save("model.json")</pre>
 
 ### To Load Model
-<pre>model = NN.load("model.pkl")</pre>
+<pre>model = NN.load("model.json")</pre>
 
 ## Model Results On Gesture Recognition
 
