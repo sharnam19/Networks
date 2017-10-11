@@ -146,7 +146,7 @@ iii) Stride Height : 2 \
  ii) Width Padding : 2
 
 6) Convolution Layer \
-  i) Kernels : 64 \
+  i) Kernels : 128 \
  ii) Kernel Height : 3 \
 iii) Kernel Width  : 3 \
 iv ) Stride        : 1
