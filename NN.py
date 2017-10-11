@@ -205,4 +205,7 @@ class NN:
     
     def plot(self):
         plt.plot(self.J[1:])
+        plt.ylabel("Loss")
+        plt.xlabel("Iterations")
+        plt.title("Loss VS Iteration")
         plt.show()
