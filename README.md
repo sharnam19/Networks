@@ -188,4 +188,4 @@ The Model file can be downloaded from <a href="https://drive.google.com/open?id=
 
 Extract it in models folder &
 Load the model file as follows:
-<pre>model  = NN.load("model1.json")</pre>
+<pre>model  = NN.load("model.json")</pre>
