@@ -17,7 +17,7 @@ def test(X,y):
     
 if __name__ == "__main__":
     global model
-    model = NN.load("model1.pkl")
+    model = NN.load("model.json")
 
     data = json.load(open("data/data.json","rb"))
 
