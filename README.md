@@ -178,8 +178,10 @@ After <b>100 Epochs</b> The Model Performance is:
 
 <b>Test Accuracy:  99.8%</b>
 
-It took about **1-1.5 hour** to train this model for 100 Epochs.
-
+It took about **1-1.5 hour** to train this model for 100 Epochs. \
+Initial Weights of the Network were assigned using Xavier Initialization. \
+The Model was trained using Mini-Batch Gradient Descent with Adam Optimizer. \
+The Mini-Batch was sampled at random during training.
 ### Loss-Iteration Curve
 ![Loss-Iteration Curve for 100 Epochs](/Loss_Curve.png)
 
