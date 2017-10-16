@@ -1,5 +1,5 @@
 import numpy as np
-
+import copy
 def softmax_loss(x,y=None):
     """
         Input:
@@ -27,7 +27,6 @@ def softmax_loss(x,y=None):
 def svm_loss(x,y=None):
     """
         Input:
-            input_list=[y]
             x of shape (N,D)
             y of shape (N,). It is the class values
         Output:
@@ -51,3 +50,22 @@ def svm_loss(x,y=None):
     ones[range(N),y]=-row_sum
     dx = ones/N
     return toRet,loss,dx
+
+def mse_loss(x,y=None):
+    """
+        Input:
+            x of shape (N,) 
+            y of shape (N,). It is continuous values
+        Output:
+            loss : loss value
+            dx :RMSE Loss wrt input. Same shape as x
+    """
+    scores = x
+    if y is None:
+        return scores
+    
+    N = x.shape[0]
+    diff = x-y
+    loss = np.mean(np.square(diff))/2
+    dx = diff
+    return x,loss,dx

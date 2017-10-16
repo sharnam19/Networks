@@ -225,6 +225,25 @@ class SVM():
     def backprop(self,dOut=None):
         return self.dx
 
+def MSE():
+    
+    def __init__(self):
+        self.dx = None
+    
+    def forward(self,X,y=None):
+        if y is None:
+            scores = mse_loss(X)
+            return scores
+        else:
+            scores,loss,self.dx = mse_loss(X,y)
+            return scores,loss
+    
+    def loss_reg(self):
+        return 0.0
+    
+    def backprop(self,dOut=None):
+        return self.dx
+    
 class BatchNormalization():
     
     def __init__(self,gamma,beta,params,update_params):

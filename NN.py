@@ -126,6 +126,11 @@ class NN:
             self.layers.append(SVM())
             self.out_shape.append((1))
             
+        elif layer_name == "mse" and outshape == 2 and self.out_shape[-1][1]==1:
+            
+            self.layers.append(MSE())
+            self.out_shape.append((1))
+            
         elif layer_name == "batch_normalization" and outshape==2:
             
             shape = self.out_shape[-1]

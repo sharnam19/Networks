@@ -90,7 +90,7 @@ def spatial_batch_forward(x,gamma,beta,params):
     reshaped_x = np.swapaxes(np.swapaxes(x,1,2),2,3)
     reshaped_x = reshaped_x.reshape(-1,C)
     
-    out,cache = batch_normalization_forward(reshaped_x,[gamma,beta,params])
+    out,cache = batch_normalization_forward(reshaped_x,gamma,beta,params)
     out = out.reshape(N,H,W,C)
     out = np.swapaxes(np.swapaxes(out,2,3),2,1)
     return out,cache
