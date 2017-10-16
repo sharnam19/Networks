@@ -64,7 +64,8 @@ padding_w=2
 <pre>No params</pre>
 ### 2. SVM Loss Layer
 <pre>No params</pre>
-
+### 3. Mean Squared Error Layer
+<pre>No params</pre>
 ### Fully Connected Layer
 
 ### 1. Affine Layer
