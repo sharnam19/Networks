@@ -1,9 +1,3 @@
-# from layers.util.layer import *
-# from layers.util.util import *
-# from layers.util.activations import *
-# from layers.util.normalization import *
-# from layers.util.convolution import *
-# from layers.util.loss import *
 from layers.layer import *
 from operator import mul
 import matplotlib.pyplot as plt
