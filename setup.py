@@ -8,7 +8,7 @@ setup(
     author = 'Shharrnam Chhatpar',
     author_email = 'sharnam19.nc@gmail.com',
     url = 'https://github.com/sharnam19/NN-Library',
-    download_url = 'https://github.com/sharnam19/NN-Library/archive/v0.2.tar.gz',
+    download_url = 'https://github.com/sharnam19/NN-Library/archive/0.3.tar.gz',
     keywords = ['machine-learning', 'deep-learning','neural-networks','linear regression',
                 'logistic regression'],
     classifiers = [],
