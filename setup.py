@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name = 'networks',
-    packages = ['networks'],
+    packages = ['networks','networks/layers','networks/layers/util/','networks/layers/descent/'],
     version = '0.3',  # Ideally should be same as your GitHub release tag varsion
     description = 'Allows to create NN models',
     author = 'Shharrnam Chhatpar',
