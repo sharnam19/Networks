@@ -111,8 +111,14 @@ convolution_params:{
 ### To Add Affine Layer
 <pre>model.add("affine",affine_out=128)</pre>
 
-### To Add a Loss Layer
+### To Add Softmax Loss Layer
 <pre>model.add("softmax")</pre>
+
+### To Add SVM Loss Layer
+<pre>model.add("svm")</pre>
+
+### To Add MSE Loss Layer
+<pre>model.add("mse")</pre>
 
 ### To Save Model
 <pre>model.save("model.json")</pre>
