@@ -1,7 +1,11 @@
 # Modular Machine/Deep Learning Library
 Machine Learning and Deep Learning Models from Scratch.\
-This Library allows users to create **Feed-Forward Neural Networks,\
-Convolution Neural Networks, Linear Regression & Logistic Regression**.
+This Library allows users to create the following models:
+1) **Feed-Forward Neural Networks**
+2) **Convolution Neural Networks**
+3) **Linear Regression**
+4) **Logistic Regression**
+
 Without having to write any **backpropagation** code.
 
 To install the **Networks** Library
