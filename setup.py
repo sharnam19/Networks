@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name = 'networks',
     packages = ['networks'],
-    version = '0.2',  # Ideally should be same as your GitHub release tag varsion
+    version = '0.3',  # Ideally should be same as your GitHub release tag varsion
     description = 'Allows to create NN models',
     author = 'Shharrnam Chhatpar',
     author_email = 'sharnam19.nc@gmail.com',
