@@ -12,4 +12,10 @@ setup(
     keywords = ['machine-learning', 'deep-learning','neural-networks','linear regression',
                 'logistic regression'],
     classifiers = [],
+    install_requires=[
+        'jsonpickle',
+        'numpy',
+        'scipy',
+        'matplotlib'
+    ]
 )

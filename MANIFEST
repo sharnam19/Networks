@@ -3,3 +3,14 @@ setup.cfg
 setup.py
 networks/__init__.py
 networks/network.py
+networks/layers/__init__.py
+networks/layers/layer.py
+networks/layers/descent/__init__.py
+networks/layers/descent/descent.py
+networks/layers/util/__init__.py
+networks/layers/util/activations.py
+networks/layers/util/convolution.py
+networks/layers/util/layer.py
+networks/layers/util/loss.py
+networks/layers/util/normalization.py
+networks/layers/util/util.py
