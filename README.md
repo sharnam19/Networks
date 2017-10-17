@@ -10,10 +10,6 @@ Without having to write any **backpropagation** code.
 
 To install the **Networks** Library
 <pre>
-pip install numpy
-pip install scipy
-pip install jsonpickle
-pip install matplotlib
 pip install networks</pre>
 
 # Layers in the Library & their Parameters in Add function
