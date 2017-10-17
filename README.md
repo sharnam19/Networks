@@ -1,4 +1,4 @@
-# Modular Machine/Deep Learning Library
+# Networks - A Machine/Deep Learning Library
 Machine Learning and Deep Learning Models from Scratch.\
 This Library allows users to create the following models:
 1) **Feed-Forward Neural Networks**
