@@ -209,7 +209,8 @@ class network:
         for layer in self.layers[:-1]:
             inp = layer.forward(inp)
             loss += layer.loss_reg()
-                
+        
+        print(loss)
         scores,inp = self.layers[-1].forward(inp,y)
         return self.accuracy(scores,y),inp+loss
     
