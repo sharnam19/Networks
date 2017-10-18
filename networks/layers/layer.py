@@ -244,7 +244,7 @@ def MSE():
     def backprop(self,dOut=None):
         return self.dx
 
-def CrossEntropy():
+class CrossEntropy():
     
     def __init__(self):
         self.dx = None

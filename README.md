@@ -75,7 +75,10 @@ padding_w=2
 <pre>No params</pre>
 ### 3. Mean Squared Error Layer
 <pre>No params</pre>
-### Fully Connected Layer
+### 4. Cross Entropy Loss Layer
+<pre>No params</pre>
+
+## Fully Connected Layer
 
 ### 1. Affine Layer
 <pre>affine_out = 64</pre>
@@ -129,6 +132,9 @@ convolution_params:{
 
 ### To Add MSE Loss Layer
 <pre>model.add("mse")</pre>
+
+### To Add Cross Entropy Loss Layer
+<pre>model.add("cross-entropy")</pre>
 
 ### To Save Model
 <pre>model.save("model.json")</pre>

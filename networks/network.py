@@ -124,6 +124,11 @@ class network:
             
             self.layers.append(MSE())
             self.out_shape.append((1))
+        
+        elif layer_name =="cross-entropy" and outshape==2:
+
+            self.layers.append(CrossEntropy())
+            self.out_shape.append((1))
             
         elif layer_name == "batch_normalization" and outshape==2:
             
@@ -134,6 +139,7 @@ class network:
             beta = np.zeros((D,))
             self.layers.append(BatchNormalization(gamma,beta,batch_params,self.update_params))
             self.out_shape.append(shape)
+            
         elif layer_name == "spatial_batch" and outshape==4:
             
             shape = self.out_shape[-1]
@@ -141,13 +147,15 @@ class network:
             beta = np.zeros((shape[1],))
             self.layers.append(SpatialBatchNormalization(gamma,beta,batch_params,self.update_params))
             self.out_shape.append(shape)
+            
         else:
             print "Check Shapes"
             raise NotImplementedError
     
     
     def train(self,X,y):
-        self.test(X[:64],y[:64])
+        batch_size = self.out_shape[0][0]
+        self.test(X[:batch_size],y[:batch_size])
         print("Initial Cost :"+str(self.J[-1]))
         print("Initial Accuracy :"+str(self.accuracies[-1]))
         
