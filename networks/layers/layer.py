@@ -9,14 +9,12 @@ import numpy as np
 import copy
 
 def regularization(weight,params):
-    reg = params.get('reg',0.0)
     reg_type = params.get('reg_type')
-    #print(str(reg) + " :  "+reg_type)
     if reg_type is not 'None':
         reg = params.get('reg',0.0)
-        if reg_type is 'L2':
+        if reg_type == 'L2':
             return reg*np.sum(np.square(weight))
-        elif reg_type is 'L1':
+        elif reg_type == 'L1':
             return reg*np.sum(np.abs(weight))
         else:
             return 0.0

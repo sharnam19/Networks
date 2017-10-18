@@ -210,7 +210,6 @@ class network:
             inp = layer.forward(inp)
             loss += layer.loss_reg()
         
-        print(loss)
         scores,inp = self.layers[-1].forward(inp,y)
         return self.accuracy(scores,y),inp+loss
     
@@ -219,8 +218,14 @@ class network:
     
     def predict(self,X):
         inp = X
+        for normalization_layer in self.normalization_layers:
+            normalization_layer.params["mode"]="test"
+        
         for layer in self.layers:
             inp = layer.forward(inp)
+        
+        for normalization_layer in self.normalization_layers:
+            normalization_layer.params["mode"]="train"
             
         return np.argmax(inp,axis=1)
     
