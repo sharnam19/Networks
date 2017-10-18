@@ -87,7 +87,8 @@ def cross_entropy_loss(x,y=None):
         raise NotImplementedError
         
     N=x.shape[0]
-    loss = np.mean(-y*np.log(x)-(1-y)*np.log(1-x))/2
+    t= -y*np.log(x)-(1-y)*np.log(1-x)
+    loss = np.sum(t)/(2*N)
     dx = -y/x+(1-y)/(1-x)
     dx /= 2*N
     return x,loss,dx

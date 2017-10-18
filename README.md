@@ -118,6 +118,15 @@ convolution_params:{
   'pooling_stide_width':2
   })
 </pre>
+
+### To Add Batch Normalization Layer
+<pre>model.add("batch_normalization",
+batch_params={'mode':'train'/'test','momentum':0.9,'eps':1e-8})</pre>
+
+### To Add Spatial Batch Normalization Layer
+<pre>model.add("spatial_batch",
+batch_params={'mode':'train'/'test','momentum':0.9,'eps':1e-8})</pre>
+
 ### To Add a Flatten Layer
 <pre>model.add("flatten")</pre>
 
@@ -134,7 +143,7 @@ convolution_params:{
 <pre>model.add("mse")</pre>
 
 ### To Add Cross Entropy Loss Layer
-<pre>model.add("cross-entropy")</pre>
+<pre>model.add("cross_entropy")</pre>
 
 ### To Save Model
 <pre>model.save("model.json")</pre>

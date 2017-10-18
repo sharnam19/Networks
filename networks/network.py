@@ -16,6 +16,7 @@ class network:
         self.out_shape=[input_shape]
         self.update_params=update_params
         self.initialization = initialization
+        self.normalization_layers=[]
         
     def initializer(self,mean=0,shift=0.01,shape=None,initialization="normal"):
         if initialization == "normal":
@@ -125,7 +126,7 @@ class network:
             self.layers.append(MSE())
             self.out_shape.append((1))
         
-        elif layer_name =="cross-entropy" and outshape==2:
+        elif layer_name =="cross_entropy" and outshape==2:
 
             self.layers.append(CrossEntropy())
             self.out_shape.append((1))
@@ -138,6 +139,7 @@ class network:
             gamma = np.ones((D,))
             beta = np.zeros((D,))
             self.layers.append(BatchNormalization(gamma,beta,batch_params,self.update_params))
+            self.normalization_layers.append(self.layers[-1])
             self.out_shape.append(shape)
             
         elif layer_name == "spatial_batch" and outshape==4:
@@ -146,6 +148,7 @@ class network:
             gamma = np.ones((shape[1],))
             beta = np.zeros((shape[1],))
             self.layers.append(SpatialBatchNormalization(gamma,beta,batch_params,self.update_params))
+            self.normalization_layers.append(self.layers[-1])
             self.out_shape.append(shape)
             
         else:
@@ -155,9 +158,11 @@ class network:
     
     def train(self,X,y):
         batch_size = self.out_shape[0][0]
-        self.test(X[:batch_size],y[:batch_size])
-        print("Initial Cost :"+str(self.J[-1]))
-        print("Initial Accuracy :"+str(self.accuracies[-1]))
+        acc, cost = self.test(X[:batch_size],y[:batch_size])
+        self.accuracies.append(acc)
+        self.J.append(cost)
+        print("Initial Cost :"+str(cost))
+        print("Initial Accuracy :"+str(acc))
         
         for i in range(self.update_params['epoch']):
             sample  = np.random.randint(0,X.shape[0],(self.out_shape[0][0],))
@@ -172,36 +177,41 @@ class network:
             for layer in self.layers[::-1]:
                 inp = layer.backprop(inp)
             
-            self.test(X[sample],y[sample])
-            print("Cost at Iteration "+str(i)+" : "+str(self.J[-1]))
-            print("Accuracy at Iteration "+str(i)+" : "+str(self.accuracies[-1]))
+            acc,cost = self.test(X[sample],y[sample])
+            self.accuracies.append(acc)
+            self.J.append(cost)
+            print("Cost at Iteration "+str(i)+" : "+str(cost))
+            print("Accuracy at Iteration "+str(i)+" : "+str(acc))
                   
-    def test(self,X,y, accuracies = None,costs= None):
-        if accuracies is None:
-            accuracies = self.accuracies
-            costs = self.J
+    def test(self,X,y):
+        accuracies = []
+        loss = []
+        for normalization_layer in self.normalization_layers:
+            normalization_layer.params['mode']='test'
+            
+        batch_size = self.out_shape[0][0]
+        for i in range(0,X.shape[0],batch_size):
+            end = min(i+batch_size,X.shape[0])
+            batch_acc,batch_loss = self.batch_test(X[i:end],y[i:end])
+            accuracies.append(batch_acc)
+            loss.append(batch_loss)
+        
+        accuracies = np.array(accuracies)
+        loss = np.array(loss)
+        for normalization_layer in self.normalization_layers:
+            normalization_layer.params['mode']='train'
+            
+        return np.mean(accuracies),np.sum(loss)
+        
+    def batch_test(self,X,y):
         loss = 0.0
         inp = X
         for layer in self.layers[:-1]:
             inp = layer.forward(inp)
             loss += layer.loss_reg()
-        
+                
         scores,inp = self.layers[-1].forward(inp,y)
-        accuracies.append(self.accuracy(scores,y))
-        costs.append(inp+loss)
-    
-    def batch_test(self,X,y):
-        accuracies = []
-        costs = []
-        batch_size = self.out_shape[0][0]
-        for i in range(0,X.shape[0],batch_size):
-            end = min(i+batch_size,X.shape[0])
-            self.test(X[i:end],y[i:end],accuracies,costs)
-    
-        accuracies = np.array(accuracies)
-        costs = np.array(costs)
-        print("Accuracy : ",np.mean(accuracies))
-        print("Cost : ",np.sum(costs))
+        return self.accuracy(scores,y),inp+loss
     
     def accuracy(self,scores,y):
         return 1.0*np.sum(np.argmax(scores,axis=1)==y)/y.shape[0]
@@ -225,7 +235,5 @@ class network:
     
     def plot(self):
         plt.plot(self.J[1:])
-        plt.ylabel("Loss")
-        plt.xlabel("Iterations")
         plt.title("Loss VS Iteration")
         plt.show()

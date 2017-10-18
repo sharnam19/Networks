@@ -263,7 +263,7 @@ class CrossEntropy():
     def backprop(self,dOut=None):
         return self.dx
 
-class BatchNormalization():
+class BatchNormalization(object):
     
     def __init__(self,gamma,beta,params,update_params):
         self.gamma = gamma
@@ -287,7 +287,7 @@ class BatchNormalization():
         self.cache = None
         return dx
 
-class SpatialBatchNormalization():
+class SpatialBatchNormalization(object):
     
     def __init__(self,gamma,beta,params,update_params):
         self.gamma = gamma
