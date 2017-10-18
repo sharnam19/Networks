@@ -150,3 +150,12 @@ batch_params={'mode':'train'/'test','momentum':0.9,'eps':1e-8})</pre>
 
 ### To Load Model
 <pre>model = network.load("model.json")</pre>
+
+### To Train Model
+<pre>model.train(X,y)</pre>
+
+### To Get Accuracy & Loss After Training
+<pre>accuracy,loss = model.test(validX,validY)</pre>
+
+### To Predict
+<pre>predictions = model.predict(X)</pre>
