@@ -201,7 +201,7 @@ class network:
         for normalization_layer in self.normalization_layers:
             normalization_layer.params['mode']='train'
             
-        return np.mean(accuracies),np.sum(loss)
+        return np.mean(accuracies),np.mean(loss)
         
     def batch_test(self,X,y):
         loss = 0.0
