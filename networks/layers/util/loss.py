@@ -58,7 +58,7 @@ def mse_loss(x,y=None):
             y of shape (N,). It is continuous values
         Output:
             loss : loss value
-            dx :RMSE Loss wrt input. Same shape as x
+            dx :gradient of RMSE Loss wrt input. Same shape as x
     """
     scores = x
     if y is None:
@@ -67,5 +67,29 @@ def mse_loss(x,y=None):
     N = x.shape[0]
     diff = x-y
     loss = np.mean(np.square(diff))/2
-    dx = diff
+    dx = diff/N
+    return x,loss,dx
+ 
+def cross_entropy_loss(x,y=None):
+    """
+        Input:
+            x of shape (N,D)
+            y of shape (N,). It should be class values
+        Output:
+            loss : loss value
+            dx : Gradient of Cross-Entropy Loss wrt input.Same shape as x
+    """
+    scores = x
+    if y is None:
+        return scores
+    elif y.shape<2:
+        print "y must be one-hot encoded"
+        raise NotImplementedError
+        
+    N=x.shape[0]
+    yt = np.zeros_like(x)
+    yt[range(N),y] = 1.0
+    loss = np.mean(-yt*np.log(x)-(1-yt)*np.log(1-x))/2
+    dx = -yt/x+(1-yt)/(1-x)
+    dx /= 2*N
     return x,loss,dx
