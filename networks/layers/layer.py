@@ -203,7 +203,10 @@ class Softmax():
     
     def backprop(self,dOut=None):
         return self.dx
-
+    
+    def accuracy(self,scores,y):
+        return 1.0*np.sum(np.argmax(scores,axis=1)==y)/y.shape[0]
+    
 class SVM():
 
     def __init__(self):
@@ -222,6 +225,9 @@ class SVM():
     
     def backprop(self,dOut=None):
         return self.dx
+    
+    def accuracy(self,scores,y):
+        return 1.0*np.sum(np.argmax(scores,axis=1)==y)/y.shape[0]
 
 def MSE():
     
@@ -241,6 +247,9 @@ def MSE():
     
     def backprop(self,dOut=None):
         return self.dx
+    
+    def accuracy(self,scores,y):
+        return rel_error(scores,y)
 
 class CrossEntropy():
     
@@ -260,7 +269,10 @@ class CrossEntropy():
     
     def backprop(self,dOut=None):
         return self.dx
-
+    
+    def accuracy(self,scores,y):
+        return 1.0*np.sum(round(scores,0)==y)/y.shape[0]
+    
 class BatchNormalization(object):
     
     def __init__(self,gamma,beta,params,update_params):

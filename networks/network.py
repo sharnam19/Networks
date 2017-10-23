@@ -211,10 +211,7 @@ class network:
             loss += layer.loss_reg()
         
         scores,inp = self.layers[-1].forward(inp,y)
-        return self.accuracy(scores,y),inp+loss
-    
-    def accuracy(self,scores,y):
-        return 1.0*np.sum(np.argmax(scores,axis=1)==y)/y.shape[0]
+        return self.layers[-1].accuracy(scores,y),inp+loss
     
     def predict(self,X):
         inp = X
