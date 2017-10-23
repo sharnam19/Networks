@@ -271,7 +271,8 @@ class CrossEntropy():
         return self.dx
     
     def accuracy(self,scores,y):
-        return 1.0*np.sum(round(scores,0)==y)/y.shape[0]
+        return 1.0*np.sum(np.round(scores,0)==y)/y.shape[0]
+
     
 class BatchNormalization(object):
     

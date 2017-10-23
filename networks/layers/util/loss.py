@@ -82,13 +82,12 @@ def cross_entropy_loss(x,y=None):
     scores = x
     if y is None:
         return scores
-    elif len(y.shape)<2:
-        print "y must be one-hot encoded"
-        raise NotImplementedError
-        
+    elif len(y.shape)==1:
+        y = np.reshape(y,(-1,1))
+        x = np.reshape(x,(-1,))
     N=x.shape[0]
-    t= -y*np.log(x)-(1-y)*np.log(1-x)
+    t= -y*np.log(scores)-(1-y)*np.log(1-scores)
     loss = np.sum(t)/(2*N)
-    dx = -y/x+(1-y)/(1-x)
+    dx = -y/scores+(1-y)/(1-scores)
     dx /= 2*N
     return x,loss,dx
