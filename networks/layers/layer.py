@@ -187,10 +187,21 @@ class Flatten():
 
 class Softmax():
     
-    def __init__(self):
+    def __init__(self,temporal=False,multi_loss=False):
         self.dx= None
+        self.temporal=temporal
+        self.multi_loss=multi_loss
+        self.shape=None
     
     def forward(self,X,y=None):
+        if self.temporal:
+            self.shape = X.shape
+            if self.multi_loss:
+                N,T,D = X.shape
+                X = np.reshape(X,(N*T,D))
+            else:
+                X = X[:,-1,:]
+            
         if y is None:
             scores = softmax_loss(X)
             return scores
@@ -202,7 +213,16 @@ class Softmax():
         return 0.0
     
     def backprop(self,dOut=None):
-        return self.dx
+        if self.temporal:
+            N,T,D = self.shape
+            if self.multi_loss:
+                dOut = np.reshape(dx,(N,T,D))
+            else:
+                dOut = np.zeros((N,T,D))
+                dOut[:,-1,:]=dx
+        else:
+            dOut = self.dx
+        return dOut
     
     def accuracy(self,scores,y):
         return 1.0*np.sum(np.argmax(scores,axis=1)==y)/y.shape[0]
@@ -321,3 +341,34 @@ class SpatialBatchNormalization(object):
         update_weight(self.beta,dbeta,self.beta_update_params)
         self.cache = None
         return dx        
+
+class RNN(object):
+    
+    def __init__(self,Wx,Wh,b,bptt,update_params,max_length=None):
+        self.Wx = Wx
+        self.Wh = Wh
+        self.b = b
+        self.max_length=max_length
+        self.bptt = bptt
+        self.Wxparams = copy.deepcopy(update_params)
+        self.Whparams = copy.deepcopy(update_params)
+        self.bparams = copy.deepcopy(update_params)
+        self.cache = None
+    
+    def forward(self,X,y=None):
+        N = X.shape[0]
+        H = self.Wh.shape[0]
+        h0 = np.zeros((N,H))
+        out, self.cache = rnn_forward(X,h0,self.Wx,self.Wy,self.b)
+        return out
+    
+    def backprop(self,dOut):
+        dx,dprev_h,dWx,dWh,db = rnn_backward(dOut,self.cache)
+        self.cache = None
+        update_weight(self.Wx,dWx,self.Wxparams)
+        update_weight(self.Wh,dWh,self.Whparams)
+        update_weight(self.b,db,self.bparams)
+        return dx
+    
+    def loss_reg(self):
+        return regularization(self.Wx,self.Wxparams)+regularization(self.Wh,self.Whparams)
