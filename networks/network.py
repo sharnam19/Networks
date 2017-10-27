@@ -155,7 +155,25 @@ class network:
             print "Check Shapes"
             raise NotImplementedError
     
-    
+    def forward(self,X,y=None):
+        loss = 0.0
+        inp = X
+        if y == None:
+            for layer in self.layers:
+                inp =  layer.forward(inp)
+            return inp
+        else:
+            for layer in self.layers[:-1]:
+                inp = layer.forward(inp)
+                loss += layer.loss_reg()
+
+            scores,inp = self.layers[-1].forward(inp,y[sample])
+            return scores,inp+loss
+        
+    def backward(self,dX):
+        for layer in self.layers[::-1]:
+            dX = layer.backprop(dX)
+            
     def train(self,X,y):
         batch_size = self.out_shape[0][0]
         acc, cost = self.test(X[:batch_size],y[:batch_size])
@@ -163,21 +181,20 @@ class network:
         self.J.append(cost)
         print("Initial Cost :"+str(cost))
         print("Initial Accuracy :"+str(acc))
-        
+        toSample = True
+        if X.shape[0] == self.out_shape[0][0]:
+            toSample = False
+            sample = range(0,X.shape[0])
         for i in range(self.update_params['epoch']):
-            sample  = np.random.randint(0,X.shape[0],(self.out_shape[0][0],))
-            inp = X[sample]
-            loss = 0.0
-            for layer in self.layers[:-1]:
-                inp = layer.forward(inp)
-                loss += layer.loss_reg()
+            if toSample:
+                sample  = np.random.randint(0,X.shape[0],(self.out_shape[0][0],))
+                inp = X[sample]
             
-            scores,inp = self.layers[-1].forward(inp,y[sample])
+            scores,loss = self.forward(inp,y[sample])
             
-            for layer in self.layers[::-1]:
-                inp = layer.backprop(inp)
+            self.backward(loss)
             
-            acc,cost = self.test(X[sample],y[sample])
+            acc,cost = self.batch_test(X[sample],y[sample])
             self.accuracies.append(acc)
             self.J.append(cost)
             print("Cost at Iteration "+str(i)+" : "+str(cost))
@@ -204,27 +221,19 @@ class network:
         return np.mean(accuracies),np.mean(loss)
         
     def batch_test(self,X,y):
-        loss = 0.0
-        inp = X
-        for layer in self.layers[:-1]:
-            inp = layer.forward(inp)
-            loss += layer.loss_reg()
-        
-        scores,inp = self.layers[-1].forward(inp,y)
-        return self.layers[-1].accuracy(scores,y),inp+loss
+        scores,loss = self.forward(X,y)
+        return self.layers[-1].accuracy(scores,y),loss
     
     def predict(self,X):
-        inp = X
         for normalization_layer in self.normalization_layers:
             normalization_layer.params["mode"]="test"
         
-        for layer in self.layers:
-            inp = layer.forward(inp)
+        scores = self.forward(X)
         
         for normalization_layer in self.normalization_layers:
             normalization_layer.params["mode"]="train"
             
-        return np.argmax(inp,axis=1)
+        return np.argmax(scores,axis=1)
     
     def save(self,filename):
         outfile = open('models/'+filename, 'wb')
