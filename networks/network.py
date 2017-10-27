@@ -173,7 +173,8 @@ class network:
     def backward(self,dX):
         for layer in self.layers[::-1]:
             dX = layer.backprop(dX)
-            
+        return dX
+    
     def train(self,X,y):
         batch_size = self.out_shape[0][0]
         acc, cost = self.test(X[:batch_size],y[:batch_size])
@@ -189,17 +190,17 @@ class network:
             if toSample:
                 sample  = np.random.randint(0,X.shape[0],(self.out_shape[0][0],))
                 inp = X[sample]
-            
+
             scores,loss = self.forward(inp,y[sample])
-            
+
             self.backward(loss)
-            
+
             acc,cost = self.batch_test(X[sample],y[sample])
             self.accuracies.append(acc)
             self.J.append(cost)
             print("Cost at Iteration "+str(i)+" : "+str(cost))
             print("Accuracy at Iteration "+str(i)+" : "+str(acc))
-                  
+                
     def test(self,X,y):
         accuracies = []
         loss = []

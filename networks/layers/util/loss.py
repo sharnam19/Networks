@@ -14,15 +14,16 @@ def softmax_loss(x,y=None):
     exp_x = np.exp(shifted_x)
     scores = exp_x/np.sum(exp_x,axis=1)[:,np.newaxis]
     N,D = x.shape
+    predicted = np.argmax(scores,axis=1)
     if y is None:
-        return scores
+        return predicted
     loss = 0
     loss += np.sum(-np.log(scores[range(N),y]))/N
     
     offset = np.zeros_like(scores)
     offset[range(N),y]=1
     dx = (scores-offset)/N
-    return scores,loss,dx
+    return predicted,loss,dx
 
 def svm_loss(x,y=None):
     """
@@ -34,9 +35,9 @@ def svm_loss(x,y=None):
             dx  : SVM Loss wrt input. Same shape as x
     """
     scores = x
-    toRet = copy.deepcopy(scores)
+    predicted = np.argmax(scores,axis=1)
     if y is None:
-        return scores
+        return predicted
     
     N,D = x.shape
     correct_scores = scores[range(N),y][:,np.newaxis]
@@ -49,7 +50,7 @@ def svm_loss(x,y=None):
     row_sum = np.sum(ones,axis=1)
     ones[range(N),y]=-row_sum
     dx = ones/N
-    return toRet,loss,dx
+    return predicted,loss,dx
 
 def mse_loss(x,y=None):
     """
@@ -80,8 +81,9 @@ def cross_entropy_loss(x,y=None):
             dx : Gradient of Cross-Entropy Loss wrt input.Same shape as x
     """
     scores = x
+    predicted = np.round(scores,0)
     if y is None:
-        return scores
+        return predicted
     elif len(y.shape)==1:
         y = np.reshape(y,(-1,1))
         x = np.reshape(x,(-1,))
@@ -90,4 +92,4 @@ def cross_entropy_loss(x,y=None):
     loss = np.sum(t)/(2*N)
     dx = -y/scores+(1-y)/(1-scores)
     dx /= 2*N
-    return x,loss,dx
+    return predicted,loss,dx

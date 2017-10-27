@@ -187,45 +187,25 @@ class Flatten():
 
 class Softmax():
     
-    def __init__(self,temporal=False,multi_loss=False):
+    def __init__(self):
         self.dx= None
-        self.temporal=temporal
-        self.multi_loss=multi_loss
-        self.shape=None
     
     def forward(self,X,y=None):
-        if self.temporal:
-            self.shape = X.shape
-            if self.multi_loss:
-                N,T,D = X.shape
-                X = np.reshape(X,(N*T,D))
-            else:
-                X = X[:,-1,:]
-            
         if y is None:
-            scores = softmax_loss(X)
-            return scores
+            predicted = softmax_loss(X)
+            return predicted
         else:
-            scores,loss,self.dx = softmax_loss(X,y)
-            return scores,loss
+            predicted,loss,self.dx = softmax_loss(X,y)
+            return predicted,loss
     
     def loss_reg(self):
         return 0.0
     
     def backprop(self,dOut=None):
-        if self.temporal:
-            N,T,D = self.shape
-            if self.multi_loss:
-                dOut = np.reshape(dx,(N,T,D))
-            else:
-                dOut = np.zeros((N,T,D))
-                dOut[:,-1,:]=dx
-        else:
-            dOut = self.dx
-        return dOut
+        return self.dx
     
-    def accuracy(self,scores,y):
-        return 1.0*np.sum(np.argmax(scores,axis=1)==y)/y.shape[0]
+    def accuracy(self,predicted,y):
+        return 1.0*np.sum(predicted==y)/y.shape[0]
     
 class SVM():
 
@@ -234,11 +214,11 @@ class SVM():
     
     def forward(self,X,y=None):
         if y is None:
-            scores = softmax_loss(X)
-            return scores
+            predicted = svm_loss(X)
+            return predicted
         else:
-            scores,loss,self.dx = svm_loss(X,y)
-            return scores,loss
+            predicted,loss,self.dx = svm_loss(X,y)
+            return predicted,loss
     
     def loss_reg(self):
         return 0.0
@@ -246,8 +226,8 @@ class SVM():
     def backprop(self,dOut=None):
         return self.dx
     
-    def accuracy(self,scores,y):
-        return 1.0*np.sum(np.argmax(scores,axis=1)==y)/y.shape[0]
+    def accuracy(self,predicted,y):
+        return 1.0*np.sum(predicted==y)/y.shape[0]
 
 def MSE():
     
@@ -256,11 +236,11 @@ def MSE():
     
     def forward(self,X,y=None):
         if y is None:
-            scores = mse_loss(X)
-            return scores
+            predicted = mse_loss(X)
+            return predicted
         else:
-            scores,loss,self.dx = mse_loss(X,y)
-            return scores,loss
+            predicted,loss,self.dx = mse_loss(X,y)
+            return predicted,loss
     
     def loss_reg(self):
         return 0.0
@@ -268,8 +248,8 @@ def MSE():
     def backprop(self,dOut=None):
         return self.dx
     
-    def accuracy(self,scores,y):
-        return rel_error(scores,y)
+    def accuracy(self,predicted,y):
+        return rel_error(predicted,y)
 
 class CrossEntropy():
     
@@ -278,11 +258,11 @@ class CrossEntropy():
     
     def forward(self,X,y=None):
         if y is None:
-            scores = cross_entropy_loss(X)
-            return scores
+            predicted = cross_entropy_loss(X)
+            return predicted
         else:
-            scores,loss,self.dx = cross_entropy_loss(X,y)
-            return scores,loss
+            predicted,loss,self.dx = cross_entropy_loss(X,y)
+            return predicted,loss
     
     def loss_reg(self):
         return 0.0
@@ -290,8 +270,8 @@ class CrossEntropy():
     def backprop(self,dOut=None):
         return self.dx
     
-    def accuracy(self,scores,y):
-        return 1.0*np.sum(np.round(scores,0)==y)/y.shape[0]
+    def accuracy(self,predicted,y):
+        return 1.0*np.sum(predicted==y)/y.shape[0]
 
     
 class BatchNormalization(object):
@@ -341,34 +321,3 @@ class SpatialBatchNormalization(object):
         update_weight(self.beta,dbeta,self.beta_update_params)
         self.cache = None
         return dx        
-
-class RNN(object):
-    
-    def __init__(self,Wx,Wh,b,bptt,update_params,max_length=None):
-        self.Wx = Wx
-        self.Wh = Wh
-        self.b = b
-        self.max_length=max_length
-        self.bptt = bptt
-        self.Wxparams = copy.deepcopy(update_params)
-        self.Whparams = copy.deepcopy(update_params)
-        self.bparams = copy.deepcopy(update_params)
-        self.cache = None
-    
-    def forward(self,X,y=None):
-        N = X.shape[0]
-        H = self.Wh.shape[0]
-        h0 = np.zeros((N,H))
-        out, self.cache = rnn_forward(X,h0,self.Wx,self.Wy,self.b)
-        return out
-    
-    def backprop(self,dOut):
-        dx,dprev_h,dWx,dWh,db = rnn_backward(dOut,self.cache)
-        self.cache = None
-        update_weight(self.Wx,dWx,self.Wxparams)
-        update_weight(self.Wh,dWh,self.Whparams)
-        update_weight(self.b,db,self.bparams)
-        return dx
-    
-    def loss_reg(self):
-        return regularization(self.Wx,self.Wxparams)+regularization(self.Wh,self.Whparams)
